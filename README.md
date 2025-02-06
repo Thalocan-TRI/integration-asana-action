@@ -52,6 +52,9 @@ jobs:
                 GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 ```
 
+## Generating Asana Inputs
+In the utils file, you can generate all necessary Asana inputs to populate the workflow variables. This script requires the user to provide ASANA_PAT and will automatically retrieve all required information.
+
 ## Secrets
 It is recommended to store sensitive data such as Asana PAT as GitHub Secrets.
 
