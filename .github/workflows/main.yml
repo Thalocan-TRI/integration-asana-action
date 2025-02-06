@@ -1,7 +1,7 @@
 name: Create and Update Asana task
 
 on:
-  pull_request:
+  issues:
     types: [opened, closed]
 
 jobs:

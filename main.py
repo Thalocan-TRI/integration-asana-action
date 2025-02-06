@@ -77,16 +77,24 @@ def run():
         # pprint(event_data, indent=2)
 
         action = event_data["action"]
-        commit_url = event_data["pull_request"]["_links"]["comments"]["href"]
-        base_branch = event_data["pull_request"]["base"]["ref"]
+        title = ""
+        body = ""
+        commit_url = ""
 
-        pprint("Base branch: ", base_branch, action)
+        if "issue" in event_data:
+            commit_url = event_data["issue"]["comments_url"]
+            title = event_data["issue"]["title"]
+            body = event_data["issue"]["body"]
+        else:
+            commit_url = event_data["pull_request"]["_links"]["comments"]["href"]
+            title: str = event_data["pull_request"]["title"]
+            body: str | None = event_data["pull_request"]["body"]
+            
+        # base_branch = event_data["pull_request"]["base"]["ref"]
+        # pprint("Base branch: ", base_branch, action)
 
         if action == "opened":
-            pprint("Pull request opened")
-
-            title: str = event_data.get("pull_request", {}).get("title")
-            body: str | None = event_data.get("pull_request", {}).get("body")
+            pprint("Pull request opened")            
 
             if title.startswith("Asana:"):
                 asana_task_name = title.split("Asana:")[1].strip()
