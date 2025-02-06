@@ -16,6 +16,13 @@
 | `ASANA_CUSTOM_FIELD_STATUS_RESOLVED_ID` | Asana Custom Field Status Resolved ID | ✅ Yes |
 | `ASANA_CUSTOM_FIELD_STATUS_ISSUE_ID` | Asana Custom Field Status Issue ID | ✅ Yes |
 
+## Environment Variables
+
+| Name | Description | Required |
+|------|-------------|----------|
+| `ASANA_PAT` | Personal Access Token for Asana API authentication | ✅ Yes |
+| `GITHUB_TOKEN` | GitHub Token for GitHub Repo API authentication | ✅ Yes |
+
 ## Usage
 
 To use this action, add the following step to your GitHub Actions workflow:
