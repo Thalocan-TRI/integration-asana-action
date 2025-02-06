@@ -16,6 +16,13 @@
 | `ASANA_CUSTOM_FIELD_STATUS_RESOLVED_ID` | Asana Custom Field Status Resolved ID | ✅ Yes |
 | `ASANA_CUSTOM_FIELD_STATUS_ISSUE_ID` | Asana Custom Field Status Issue ID | ✅ Yes |
 
+## Environment Variables
+
+| Name | Description | Required |
+|------|-------------|----------|
+| `ASANA_PAT` | Personal Access Token for Asana API authentication | ✅ Yes |
+| `GITHUB_TOKEN` | GitHub Token for GitHub Repo API authentication | ✅ Yes |
+
 ## Usage
 
 To use this action, add the following step to your GitHub Actions workflow:
@@ -38,14 +45,14 @@ jobs:
             - uses: actions/checkout@v3
             - uses: Thalocan-TRI/integration-asana-action@v1
               with:
-                ASANA_WORKSPACE_ID: '1205703551806704'
-                ASANA_PROJECT_ID: '1205880144741880'
-                ASANA_SECTION_TO_DO: '1208647756867715'
-                ASANA_SECTION_DOING: '1206013198716545'
-                ASANA_CUSTOM_FIELD_STATUS_ID: '1205880144741940'
-                ASANA_CUSTOM_FIELD_STATUS_IN_PROGRESS_ID: '1205880144741943'
-                ASANA_CUSTOM_FIELD_STATUS_RESOLVED_ID:  '1205880144741941'
-                ASANA_CUSTOM_FIELD_STATUS_ISSUE_ID: '1205880144741942'
+                ASANA_WORKSPACE_ID: 'XXXXXXXXXXXXXXXX'
+                ASANA_PROJECT_ID: 'XXXXXXXXXXXXXXXX'
+                ASANA_SECTION_TO_DO: 'XXXXXXXXXXXXXXXX'
+                ASANA_SECTION_DOING: 'XXXXXXXXXXXXXXXX'
+                ASANA_CUSTOM_FIELD_STATUS_ID: 'XXXXXXXXXXXXXXXX'
+                ASANA_CUSTOM_FIELD_STATUS_IN_PROGRESS_ID: 'XXXXXXXXXXXXXXXX'
+                ASANA_CUSTOM_FIELD_STATUS_RESOLVED_ID:  'XXXXXXXXXXXXXXXX'
+                ASANA_CUSTOM_FIELD_STATUS_ISSUE_ID: 'XXXXXXXXXXXXXXXX'
 
               env:
                 ASANA_PAT: ${{ secrets.ASANA_PAT }}
