@@ -10,20 +10,12 @@ def create_asana_task(
     api_client,
     section_id: str,
     project_id: str,
-    status_id: str,
-    status_enum_id: str,
     name: str,
     notes: str | None = None,
 ):
     api_task_client = asana.TasksApi(api_client)
 
-    body = {
-        "data": {
-            "name": name,
-            "projects": [project_id],
-            "custom_fields": {status_id: status_enum_id},
-        }
-    }
+    body = {"data": {"name": name, "projects": [project_id]}}
 
     if notes is not None:
         body["data"]["notes"] = notes
@@ -103,8 +95,6 @@ def run():
                     api_client,
                     ASANA_SECTION_TO_DO,
                     ASANA_PROJECT_ID,
-                    ASANA_CUSTOM_FIELD_STATUS_ID,
-                    ASANA_CUSTOM_FIELD_STATUS_IN_PROGRESS_ID,
                     asana_task_name,
                     body,
                 )
