@@ -11,6 +11,9 @@ inputs:
   ASANA_SECTION_DOING:
     description: "Asana Section Doing ID"
     required: true
+  ASANA_SECTION_DONE:
+    description: "Asana Section Done ID"
+    required: true
   ASANA_WORKSPACE_ID:
     description: "Asana Workspace ID"
     required: true

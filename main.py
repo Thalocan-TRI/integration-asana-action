@@ -38,12 +38,12 @@ def create_asana_task(
     return task
 
 
-def update_asana_task(api_client, task_id: str, status_id: str, status_enum_id: str):
-    api_task_client = asana.TasksApi(api_client)
+def move_asana_task_to_section(api_client, task_id: str, section_id: str):
+    api_section_client = asana.SectionsApi(api_client)
 
-    body = {"data": {"custom_fields": {status_id: status_enum_id}}}
-
-    return api_task_client.update_task(body, task_id, {})
+    return api_section_client.add_task_for_section(
+        section_id, {"body": {"data": {"task": task_id}}}
+    )
 
 
 ASANA_PAT = os.getenv("ASANA_PAT")
@@ -51,7 +51,8 @@ GITHUB_TOKEN = os.getenv("GITHUB_TOKEN")
 EVENT_NAME = os.getenv("GITHUB_EVENT_NAME")
 
 ASANA_PROJECT_ID = os.getenv("INPUT_ASANA_PROJECT_ID")
-ASANA_SECTION_DOING = os.getenv("INPUT_ASANA_SECTION_DOING")
+ASANA_SECTION_TO_DO = os.getenv("INPUT_ASANA_SECTION_TO_DO")
+ASANA_SECTION_DONE = os.getenv("INPUT_ASANA_SECTION_DONE")
 ASANA_WORKSPACE_ID = os.getenv("INPUT_ASANA_WORKSPACE_ID")
 ASANA_CUSTOM_FIELD_STATUS_ID = os.getenv("INPUT_ASANA_CUSTOM_FIELD_STATUS_ID")
 ASANA_CUSTOM_FIELD_STATUS_IN_PROGRESS_ID = os.getenv(
@@ -89,18 +90,18 @@ def run():
             commit_url = event_data["pull_request"]["_links"]["comments"]["href"]
             title: str = event_data["pull_request"]["title"]
             body: str | None = event_data["pull_request"]["body"]
-            
+
         # base_branch = event_data["pull_request"]["base"]["ref"]
         # pprint("Base branch: ", base_branch, action)
 
         if action == "opened":
-            pprint("Pull request opened")            
+            pprint("Pull request opened")
 
             if title.startswith("Asana:"):
                 asana_task_name = title.split("Asana:")[1].strip()
                 asana_task = create_asana_task(
                     api_client,
-                    ASANA_SECTION_DOING,
+                    ASANA_SECTION_TO_DO,
                     ASANA_PROJECT_ID,
                     ASANA_CUSTOM_FIELD_STATUS_ID,
                     ASANA_CUSTOM_FIELD_STATUS_IN_PROGRESS_ID,
@@ -130,11 +131,10 @@ def run():
                         )
 
                         try:
-                            update_asana_task(
+                            move_asana_task_to_section(
                                 api_client,
                                 asana_task_id,
-                                ASANA_CUSTOM_FIELD_STATUS_ID,
-                                ASANA_CUSTOM_FIELD_STATUS_RESOLVED_ID,
+                                ASANA_SECTION_DONE,
                             )
                         except ApiException as e:
                             print(e)
