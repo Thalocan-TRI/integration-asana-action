@@ -1,0 +1,16 @@
+{
+  "inputs": {
+    "ISSUE_NUMBER": "1"
+  },
+  "ref": "refs/heads/main",
+  "repository": {
+    "full_name": "ivanjun10r/github-actions-test",
+    "name": "github-actions-test",
+    "owner": {
+      "login": "ivanjun10r"
+    }
+  },
+  "sender": {
+    "login": "ivanjun10r"
+  }
+}
