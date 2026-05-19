@@ -1,5 +1,11 @@
 # Integration Asana Action
 
+[![CI](https://github.com/Thalocan-TRI/integration-asana-action/actions/workflows/ci.yml/badge.svg)](https://github.com/Thalocan-TRI/integration-asana-action/actions/workflows/ci.yml)
+[![Python](https://img.shields.io/badge/python-3.10-blue?logo=python&logoColor=white)](https://www.python.org/downloads/release/python-3100/)
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+[![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit)](https://github.com/pre-commit/pre-commit)
+[![Coverage](https://img.shields.io/badge/coverage-%E2%89%A580%25-brightgreen)](https://github.com/Thalocan-TRI/integration-asana-action/actions/workflows/ci.yml)
+
 ## Description
 **Integration Asana Action** is a GitHub Action that creates and updates tasks in Asana. This action helps automate task management by integrating GitHub workflows with Asana projects.
 

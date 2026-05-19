@@ -24,7 +24,7 @@ jobs:
           key: pre-commit-${{ hashFiles('.pre-commit-config.yaml') }}
 
       - name: Install pre-commit
-        run: pip install pre-commit==4.1.0
+        run: pip install pre-commit==4.6.0
 
       - name: Run linters
         run: pre-commit run --all-files
@@ -47,4 +47,4 @@ jobs:
         run: pip install -r requirements/base.txt -r requirements/test.txt
 
       - name: Run tests with coverage
-        run: pytest tests/ --cov=main --cov-report=term-missing --cov-fail-under=80
+        run: pytest tests/ --cov=main --cov=clients --cov=services --cov-report=term-missing --cov-fail-under=80
