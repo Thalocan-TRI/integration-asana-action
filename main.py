@@ -41,6 +41,7 @@ def move_asana_task_to_section(api_client, task_id: str, section_id: str):
 ASANA_PAT = os.getenv("ASANA_PAT")
 GITHUB_TOKEN = os.getenv("GITHUB_TOKEN")
 EVENT_NAME = os.getenv("GITHUB_EVENT_NAME")
+GITHUB_REPOSITORY = os.getenv("GITHUB_REPOSITORY")
 
 ASANA_PROJECT_ID = os.getenv("INPUT_ASANA_PROJECT_ID")
 ASANA_SECTION_TO_DO = os.getenv("INPUT_ASANA_SECTION_TO_DO")
@@ -53,6 +54,7 @@ ASANA_CUSTOM_FIELD_STATUS_IN_PROGRESS_ID = os.getenv(
 ASANA_CUSTOM_FIELD_STATUS_RESOLVED_ID = os.getenv(
     "INPUT_ASANA_CUSTOM_FIELD_STATUS_RESOLVED_ID"
 )
+ISSUE_NUMBER = os.getenv("INPUT_ISSUE_NUMBER")
 
 headers = {
     "Authorization": f"Bearer {GITHUB_TOKEN}",
@@ -64,8 +66,70 @@ configuration.access_token = ASANA_PAT
 api_client = asana.ApiClient(configuration)
 
 
+def _is_already_synced(comments_url: str) -> bool:
+    response = requests.get(comments_url, headers=headers)
+    if response.status_code == 200:
+        for comment in response.json():
+            if "Asana Task ID:" in comment["body"]:
+                return True
+    return False
+
+
+def _create_task_and_comment(title: str, body: str | None, comments_url: str):
+    asana_task_name = (
+        title.split("Asana:")[1].strip() if title.startswith("Asana:") else title
+    )
+    asana_task = create_asana_task(
+        api_client,
+        ASANA_SECTION_TO_DO,
+        ASANA_PROJECT_ID,
+        asana_task_name,
+        body,
+    )
+    data = {"body": "Asana Task ID: %s" % asana_task["gid"]}
+    response = requests.post(comments_url, json=data, headers=headers)
+    if response.status_code == 201:
+        print("Comment created successfully")
+    else:
+        print(f"Failed to create comment: {response.status_code}")
+
+
+def handle_workflow_dispatch():
+    if not ISSUE_NUMBER:
+        print("INPUT_ISSUE_NUMBER not provided for workflow_dispatch")
+        return
+    if not GITHUB_REPOSITORY:
+        print("GITHUB_REPOSITORY environment variable is not set")
+        return
+
+    issue_url = (
+        f"https://api.github.com/repos/{GITHUB_REPOSITORY}/issues/{ISSUE_NUMBER}"
+    )
+    response = requests.get(issue_url, headers=headers)
+    if response.status_code != 200:
+        print(f"Failed to fetch issue #{ISSUE_NUMBER}: {response.status_code}")
+        return
+
+    issue_data = response.json()
+    title = issue_data["title"]
+    body = issue_data.get("body")
+    comments_url = issue_data["comments_url"]
+
+    if _is_already_synced(comments_url):
+        print(f"Issue #{ISSUE_NUMBER} is already synced to Asana")
+        return
+
+    print(f"Syncing issue #{ISSUE_NUMBER} to Asana")
+    _create_task_and_comment(title, body, comments_url)
+
+
 def run():
-    with open("/github/workflow/event.json", "r") as file:
+    if EVENT_NAME == "workflow_dispatch":
+        handle_workflow_dispatch()
+        return
+
+    event_path = os.getenv("GITHUB_EVENT_PATH", "/github/workflow/event.json")
+    with open(event_path, "r") as file:
         event_data = json.load(file)
         # pprint(event_data, indent=2)
 
@@ -107,6 +171,11 @@ def run():
                     print("Comment created successfully")
                 else:
                     print(f"Failed to create comment: {response.status_code}")
+
+        elif action == "edited":
+            if title.startswith("Asana:") and not _is_already_synced(commit_url):
+                print("Issue/PR edited with Asana prefix — syncing to Asana")
+                _create_task_and_comment(title, body, commit_url)
 
         elif action == "closed":
             pprint("Pull request closed")
