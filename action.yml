@@ -29,6 +29,9 @@ inputs:
   ASANA_CUSTOM_FIELD_STATUS_ISSUE_ID:
     description: "Asana Custom Field Status Issue ID"
     required: true
+  ISSUE_NUMBER:
+    description: "GitHub Issue number to sync retroactively (used with workflow_dispatch)"
+    required: false
 
 runs:
   using: "docker"

@@ -2,7 +2,12 @@ name: Create and Update Asana task
 
 on:
   issues:
-    types: [opened, closed]
+    types: [opened, edited, closed]
+  workflow_dispatch:
+    inputs:
+      ISSUE_NUMBER:
+        description: "GitHub Issue number to sync retroactively"
+        required: true
 
 jobs:
     create_update_asana_task:
@@ -23,6 +28,7 @@ jobs:
                 ASANA_CUSTOM_FIELD_STATUS_IN_PROGRESS_ID: '1205880144741943'
                 ASANA_CUSTOM_FIELD_STATUS_RESOLVED_ID:  '1205880144741941'
                 ASANA_CUSTOM_FIELD_STATUS_ISSUE_ID: '1205880144741942'
+                ISSUE_NUMBER: ${{ github.event.inputs.ISSUE_NUMBER }}
 
               env:
                 ASANA_PAT: ${{ secrets.ASANA_PAT }}

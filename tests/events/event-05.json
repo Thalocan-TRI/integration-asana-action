@@ -1,0 +1,9 @@
+{
+  "action": "closed",
+  "issue": {
+    "number": 2,
+    "title": "Asana: issue antiga",
+    "body": "",
+    "comments_url": "https://api.github.com/repos/ivanjun10r/github-actions-test/issues/2/comments"
+  }
+}
